@@ -1,0 +1,30 @@
+{
+  "name": "inveico",
+  "version": "1.0.0",
+  "description": "",
+  "main": "public/index.php",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "tcss": "tailwindcss -i ./resources/css/index.css -o ./public/css/index.css --watch",
+    "tcss:build": "tailwindcss -i ./resources/css/index.css -o ./public/css/index.css --minify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kentomii/inveicov1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kentomii/inveicov1/issues"
+  },
+  "homepage": "https://github.com/Kentomii/inveicov1#readme",
+  "devDependencies": {
+    "tailwindcss": "^3.3.2"
+  },
+  "dependencies": {
+    "tcss": "^1.0.1"
+  }
+}
