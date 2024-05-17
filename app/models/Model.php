@@ -131,7 +131,7 @@ class Model {
     public function allWithMM(string $table, bool $contrary, array $replace = null)
     {
         $tf = trim($this->table, "s");
-        $ts = trim($table, "s");
+        $ts = rtrim($table, "s"); // Arreglar porque remueve incluso los de inicio y final, unicamente tiene que ser los ultimos
         if ($contrary) {
             $tj = $ts . "_" . $tf;
         } else {

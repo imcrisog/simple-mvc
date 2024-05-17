@@ -8,7 +8,7 @@
                 <!-- <label for="name-input" class="absolute text-sm text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] px-2 peer-focus:px-2 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 bg-slate-950 peer-focus:-translate-y-4 left-1"> Nombre </label>  -->
             </div>
             <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="user">
-            <option selected value="<?= array_filter($users, fn ($u) => $u['id'] === $section['user_id'])[0]['id'] ?>"><?= array_filter($users, fn ($u) => $u['id'] === $section['user_id'])[1]['username'] ?></option>
+            <option selected value="<?= array_values(array_filter($users, fn ($u) => $u['id'] === $section['user_id']))[0]['id'] ?>"><?= array_values(array_filter($users, fn ($u) => $u['id'] === $section['user_id']))[0]['username'] ?></option>
                 <?php foreach ($users as $key => $user) { ?>
                     <?php if ($user['id'] != $section['user_id'] && $role['role_id'] == 2) { ?>
                     <option class="py-2 px-2 text-center" value="<?= $user['id'] ?>"> <?= $user['username'] ?> </option>
