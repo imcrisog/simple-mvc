@@ -22,7 +22,7 @@ class SuperController extends Controller {
             return var_dump("No estas en ninguna seccion"); 
         }
 
-        return $this->view("Admin.elements", [
+        return view("Admin.elements", [
             'title' => 'Elementos',
             'elements' => $elements,
             'section' => $section,
@@ -39,7 +39,7 @@ class SuperController extends Controller {
         $sectionable = $section->find($e['section_id']);
         $findUser = $user->find($sectionable['user_id']);
 
-        return $this->view("Admin.show_element", [
+        return view("Admin.show_element", [
             'title' => 'Ver elemento',
             'element' => $e,
             'user' => $usera,
@@ -71,8 +71,8 @@ class SuperController extends Controller {
 
     public function create_element($user) 
     {
-        $vals = $this->validator(['name', 'cantidad', 'caracteristicas', 'estado', 'marca', 'procedencia']);
-        if ($vals) return $this->backWithError("/inventory/elements", $vals);
+        $vals = validator(['name', 'cantidad', 'caracteristicas', 'estado', 'marca', 'procedencia']);
+        if ($vals) return backWithError("/inventory/elements", $vals);
         
         $element = new Element();
         $role = new RoleUser();
@@ -98,10 +98,10 @@ class SuperController extends Controller {
         $userole = $role->where("user_id", $user['id'])->first();
 
         if ($userole['role_id'] == 1) {
-            return $this->redirect("/inventory/$section/elements");
+            return redirect("/inventory/$section/elements");
         }
 
-        return $this->redirect("/inventory/elements");
+        return redirect("/inventory/elements");
     }
 
     public function updater_element($id, $user)
@@ -113,9 +113,9 @@ class SuperController extends Controller {
 
         $userole = $role->where('user_id', $user['id'])->first();
 
-        if (!$findElement) return $this->backWithError("/inventory/elements", "No se encontro el elemento a actualizar");
+        if (!$findElement) return backWithError("/inventory/elements", "No se encontro el elemento a actualizar");
 
-        return $this->view('Admin.updater_elements', [
+        return view('Admin.updater_elements', [
             'title' => 'Actualizar elemento',
             'element' => $findElement,
             'user' => $userole,
@@ -143,10 +143,10 @@ class SuperController extends Controller {
         $userole = $role->where("user_id", $user['id'])->first();
         if ($userole['role_id'] == 1) {
             $section = $findElement['section_id'];
-            return $this->redirect("/inventory/$section/elements");
+            return redirect("/inventory/$section/elements");
         }
 
-        return $this->redirect("/inventory/elements");
+        return redirect("/inventory/elements");
     }
 
     public function delete_element($id, $user)
@@ -155,7 +155,7 @@ class SuperController extends Controller {
         $role = new RoleUser();
         $findElement = $element->find($id);
 
-        if (!$findElement) return $this->backWithError("/inventory/elements", "El Elemento no existe");
+        if (!$findElement) return backWithError("/inventory/elements", "El Elemento no existe");
 
         $element->delete($id);
 
@@ -163,10 +163,10 @@ class SuperController extends Controller {
 
         if ($userole['role_id'] == 1) {
             $section = $findElement['section_id'];
-            return $this->redirect("/inventory/$section/elements");
+            return redirect("/inventory/$section/elements");
         }
 
-        return $this->redirect("/inventory/elements");
+        return redirect("/inventory/elements");
     }
 
     public function create_pdf() {}

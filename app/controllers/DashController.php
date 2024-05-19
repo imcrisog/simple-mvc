@@ -42,14 +42,14 @@ class DashController extends Controller {
         });
 
         if (count($prestusers) == 0) {
-            $this->warningmsg("No hay prestamistas disponibles.");
+            warningmsg("No hay prestamistas disponibles.");
         }
 
         if (count($superusers) == 0) {
-            $this->warningmsg("No hay supervisores disponibles.");
+            warningmsg("No hay supervisores disponibles.");
         }
 
-        return $this->view('Admin.sections', [
+        return view('Admin.sections', [
             'title' => 'Secciones',
             'sections' => $sections,
             'users' => $users,
@@ -60,8 +60,8 @@ class DashController extends Controller {
 
     public function create_section($user) 
     {
-        $vals = $this->validator(['name', 'supervisor', 'prestamist']);
-        if ($vals) return $this->backWithError("/inventory/sections", $vals);
+        $vals = validator(['name', 'supervisor', 'prestamist']);
+        if ($vals) return backWithError("/inventory/sections", $vals);
 
         $section = new Section();
         $su = new SectionUser();
@@ -85,13 +85,13 @@ class DashController extends Controller {
         ]);
 
         if ($_POST['custom'] == "true") {
-            return $this->view("Admin.customization", [
+            return view("Admin.customization", [
                 'section' => $newSection
             ]);
         }
 
-        $this->successmsg("Seccion creada correctamente");
-        return $this->redirect("/inventory/sections");
+        successmsg("Seccion creada correctamente");
+        return redirect("/inventory/sections");
     }
 
     public function custom_section()
@@ -99,9 +99,9 @@ class DashController extends Controller {
         $section = new Section();
 
         if (!isset($_POST['columns']) || count($_POST['columns']) == 0) {
-            $this->errormsg("Debes ingresar al menos una columna personalizada");
+            errormsg("Debes ingresar al menos una columna personalizada");
             $newSection = $section->find($_POST['section']);
-            return $this->view("Admin.customization", [
+            return view("Admin.customization", [
                 'section' => $newSection
             ]);
         }
@@ -115,9 +115,9 @@ class DashController extends Controller {
         }
 
         if (count($cols) == 0) {
-            $this->errormsg("Debes ingresar al menos una columna personalizada");
+            errormsg("Debes ingresar al menos una columna personalizada");
             $newSection = $section->find($_POST['section']);
-            return $this->view("Admin.customization", [
+            return view("Admin.customization", [
                 'section' => $newSection
             ]);
         }
@@ -126,26 +126,25 @@ class DashController extends Controller {
             'model' => json_encode($cols)
         ]);
 
-        $this->successmsg("Se personalizo correctamente la seccion");
-        return $this->redirect("/inventory/sections");
+        successmsg("Se personalizo correctamente la seccion");
+        return redirect("/inventory/sections");
     }
 
     public function updater_section($id) 
     {
         $userable = new User();
+        $uses = $userable->all()->get();
         $users = $userable->allWithMM('sections', true)->get();
         $role = new RoleUser();
         $userole = $role->all()->get(); 
         $sus = new SectionUser();
 
-        return var_dump($users);
-
         $section = new Section();
         $findSection = $section->find($id);
 
-        if (!$findSection) return $this->backWithError("/inventory/sections", "No se encontro la seccion a actualizar");
+        if (!$findSection) return backWithError("/inventory/sections", "No se encontro la seccion a actualizar");
 
-        return $this->view('Admin.updater_sections', [
+        return view('Admin.updater_sections', [
             'title' => 'Actualiza ' . $findSection['name'],
             'section' => $findSection,
             'role' => $userole,
@@ -155,19 +154,19 @@ class DashController extends Controller {
 
     public function update_section($id) 
     {
-        $vals = $this->validator(['name']);
-        if ($vals) return $this->backWithError("/inventory/sections", $vals);
+        $vals = validator(['name']);
+        if ($vals) return backWithError("/inventory/sections", $vals);
            
         $section = new Section();
         $findSection = $section->find($id);
 
-        if (!$findSection) return $this->backWithError("/inventory/sections", "No se encontro la seccion a actualizar");
+        if (!$findSection) return backWithError("/inventory/sections", "No se encontro la seccion a actualizar");
 
         $section->update($id, [
             'name' => $_POST['name'] ??= $findSection['name'],
         ]);
 
-        return $this->redirect("/inventory/sections");
+        return redirect("/inventory/sections");
     }
 
     public function delete_section($id) 
@@ -177,7 +176,7 @@ class DashController extends Controller {
         $sectionUser = new SectionUser();
         $findSection = $section->find($id);
         
-        if (!$findSection) return $this->backWithError("/inventory/sections", "La seccion no existe");
+        if (!$findSection) return backWithError("/inventory/sections", "La seccion no existe");
 
         $userSectionFound = $sectionUser->where('section_id', $findSection['id'])->get();
         
@@ -192,14 +191,14 @@ class DashController extends Controller {
 
         $section->delete($findSection['id']);
 
-        $this->successmsg("Se elimino correctamente la Seccion");
+        successmsg("Se elimino correctamente la Seccion");
 
-        return $this->redirect("/inventory/sections");
+        return redirect("/inventory/sections");
     }
 
     public function create_user() {
-        $vals = $this->validator(['name', 'dni', 'turno', 'password']);
-        if ($vals) return $this->backWithError("/inventory/users", $vals);
+        $vals = validator(['name', 'dni', 'turno', 'password']);
+        if ($vals) return backWithError("/inventory/users", $vals);
 
         $user = new User();
 
@@ -217,9 +216,9 @@ class DashController extends Controller {
             'user_id' => $newUser["id"]
         ]);
 
-        $this->successmsg("Se creo el usuario correctamente");
+        successmsg("Se creo el usuario correctamente");
 
-        return $this->redirect("/inventory/users");
+        return redirect("/inventory/users");
     }
 
     public function show_users($user) 
@@ -232,7 +231,7 @@ class DashController extends Controller {
 
         $sections = $section->all()->get();
 
-        return $this->view("Admin.users", [
+        return view("Admin.users", [
             'title' => 'Usuarios',
             'users' => $users,
             'roles' => $roles,
@@ -252,7 +251,7 @@ class DashController extends Controller {
         $rol = $rolable->find($ur['role_id']);
         $roles = $rolable->all()->get();
 
-        return $this->view("Admin.updater_user", [
+        return view("Admin.updater_user", [
             'title' => "Actualiza " . $userFind['username'],
             "user" => $userFind,
             'rol' => $rol,
@@ -266,7 +265,7 @@ class DashController extends Controller {
         $rolable = new RoleUser();
         $findUser = $userable->find($id);
 
-        if (!$findUser) return $this->backWithError("/inventory/users", "No se encontro el usuario a actualizar");
+        if (!$findUser) return backWithError("/inventory/users", "No se encontro el usuario a actualizar");
 
         $ur = $rolable->where("user_id", $findUser['id'])->first();
 
@@ -278,7 +277,7 @@ class DashController extends Controller {
             "role_id" => $_POST['role'],
         ]);
 
-        return $this->redirect("/inventory/users");
+        return redirect("/inventory/users");
     }
 
     public function update_user_password() {}
@@ -289,14 +288,14 @@ class DashController extends Controller {
         $ur = new RoleUser();
         $findUser = $user->find($id);
 
-        if (!$findUser) return $this->backWithError("/inventory/users", "El usuario no existe");
+        if (!$findUser) return backWithError("/inventory/users", "El usuario no existe");
 
         $urol = $ur->where("user_id", $findUser['id'])->first();
         $ur->delete($urol['id']);
         $user->delete($findUser['id']);
 
-        $this->successmsg("Se elimino correctamente al usuario");
-        return $this->redirect("/inventory/users");
+        successmsg("Se elimino correctamente al usuario");
+        return redirect("/inventory/users");
     }
 
     public function elements_admin($id, $user)
@@ -309,12 +308,12 @@ class DashController extends Controller {
         $findSection = $section->find($id);
 
         if ($findSection['owner_id'] != $user['id']) {
-            return $this->backWithError("/inventory/sections", "La seccion no existe");
+            return backWithError("/inventory/sections", "La seccion no existe");
         }
 
         $ur = $rolable->where("user_id", $user['id'])->first();
 
-        return $this->view("Admin.elements", [
+        return view("Admin.elements", [
             'title' => 'Elementos',
             'elements' => $elements,
             'section' => $findSection,
@@ -337,7 +336,7 @@ class DashController extends Controller {
 
         $ur = $rolable->where("user_id", $user['id'])->first();
 
-        return $this->view("Leandings.index", [
+        return view("Leandings.index", [
             'title' => 'Prestamos',
             'leandings' => $leandings,
             'section' => $findSection,
@@ -367,7 +366,7 @@ class DashController extends Controller {
 
         $closedldg = $leandings->where("state", 1)->get();
 
-        return $this->view("Leandings.closedldg", [
+        return view("Leandings.closedldg", [
             'title' => 'Prestamos cerrados',
             'leandings' => $closedldg,
             'section' => $sectionable,

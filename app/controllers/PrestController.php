@@ -28,14 +28,14 @@ class PrestController extends Controller {
         $mysecid = $mysec['id'];
 
         if (empty($prestamist)) {
-            return $this->redirect("/inventory/$mysecid/leandings");
+            return redirect("/inventory/$mysecid/leandings");
         }
         
         $leandings = $ldg->where('section_id', $mysec['id'])->get();
         $elements = $element->where("section_id", $mysec['id'])->get();
         $ur = $rolable->where("user_id", $user['id'])->first();
 
-        return $this->view("Leandings.index", [
+        return view("Leandings.index", [
             'title' => 'Prestamos',
             'leandings' => $leandings,
             'section' => $mysec,
@@ -56,16 +56,16 @@ class PrestController extends Controller {
 
         if (empty($element)) {
             if ($roleuser['role_id'] == 1) {
-                return $this->backWithError("/inventory/$section/leandings", "El elemento no existe");
+                return backWithError("/inventory/$section/leandings", "El elemento no existe");
             }
-            return $this->backWithError("/inventory/leandings", "El elemento no existe");
+            return backWithError("/inventory/leandings", "El elemento no existe");
         }
 
         if ($element['section_id'] != $_POST['section']) {
-            return $this->backWithError("/inventory/leandings", "El elemento es inaccesible");
+            return backWithError("/inventory/leandings", "El elemento es inaccesible");
         }
 
-        return $this->view('Leandings.create', [
+        return view('Leandings.create', [
             'title' => 'Prestamo',
             'element' => $element,
             'section' => $section
@@ -77,9 +77,9 @@ class PrestController extends Controller {
         $role = new RoleUser();
         $roleuser = $role->where('user_id', $user['id'])->first();
         $section = $_POST['section'];
-        $vals = $this->validator(['name', 'course', 'dni']);
-        if ($vals && $roleuser['role_id'] == 1) return $this->backWithError("/inventory/$section/leandings", $vals);
-        if ($vals) return $this->backWithError("/inventory/leandings", $vals);
+        $vals = validator(['name', 'course', 'dni']);
+        if ($vals && $roleuser['role_id'] == 1) return backWithError("/inventory/$section/leandings", $vals);
+        if ($vals) return backWithError("/inventory/leandings", $vals);
         
         $id = intval(round($_POST["element"]));
         $elementa = new Element();
@@ -90,10 +90,10 @@ class PrestController extends Controller {
         
         if (intval($element['cantidad']) <= $counta) { 
             if ($roleuser['role_id'] == 1) {
-                return $this->backWithError("/inventory/$section/leandings", "ya no quedan unidades existentes");
+                return backWithError("/inventory/$section/leandings", "ya no quedan unidades existentes");
             }
 
-            return $this->backWithError('/inventory/leandings', "Ya no quedan unidades existentes");
+            return backWithError('/inventory/leandings', "Ya no quedan unidades existentes");
         }
         
         $leanding = new Leanding();
@@ -107,16 +107,16 @@ class PrestController extends Controller {
             'element_id' => $_POST['element']
         ]);
 
-        $this->successmsg("Prestamo creado correctamente!");
+        successmsg("Prestamo creado correctamente!");
         
         $userole = $role->where("user_id", $user['id'])->first();
         
         if ($userole['role_id'] == 1) {
             $section = $_POST['section'];
-            return $this->redirect("/inventory/$section/leandings");
+            return redirect("/inventory/$section/leandings");
         }
 
-        return $this->redirect("/inventory/leandings");
+        return redirect("/inventory/leandings");
     }
 
     public function update_leanding($id, $user) 
@@ -127,22 +127,22 @@ class PrestController extends Controller {
         $roleuser = $role->where('user_id', $user['id'])->first();
         $section = new Section();
 
-        if (!$findldg) return $this->backWithError("/inventory/leandings", "No se encontro el prestamo a actualizar");
+        if (!$findldg) return backWithError("/inventory/leandings", "No se encontro el prestamo a actualizar");
 
         $leanding->update($id, [
             'state' => !$findldg['state']
         ]);
         
-        $this->successmsg("Prestamo actualizado correctamente!");
+        successmsg("Prestamo actualizado correctamente!");
         
         if ($roleuser['role_id'] == 1){
             $sectionable = $section->where("owner_id", $user['id'])->first();
             $findSection = $sectionable['id'];
 
-            return $this->redirect("/inventory/$findSection/leandings");
+            return redirect("/inventory/$findSection/leandings");
         }
 
-        return $this->redirect("/inventory/leandings");
+        return redirect("/inventory/leandings");
     }
 
     public function delete_leanding($id, $user) {
@@ -154,20 +154,20 @@ class PrestController extends Controller {
 
         if(!$ldg) {
             if ($userole['role_id'] == 1) {
-                return $this->backWithError("/inventory/$section/leandings", 'El prestamo no existe');
+                return backWithError("/inventory/$section/leandings", 'El prestamo no existe');
             }
-            return $this->backWithError("/inventory/leandings", 'El prestamo no existe');
+            return backWithError("/inventory/leandings", 'El prestamo no existe');
         }
 
         $leanding->delete($id);
 
-        $this->successmsg("Prestamo eliminado correctamente!");
+        successmsg("Prestamo eliminado correctamente!");
 
         if ($userole['role_id'] == 1) {
-            return $this->redirect("/inventory/$section/leandings");
+            return redirect("/inventory/$section/leandings");
         }
 
-        $this->redirect('/inventory/leandings');
+        redirect('/inventory/leandings');
     }
 
     public function show_close_leandings($user)
@@ -194,7 +194,7 @@ class PrestController extends Controller {
 
         $closedldg = $leandings->where("state", 1)->get();
 
-        return $this->view("Leandings.closedldg", [
+        return view("Leandings.closedldg", [
             'title' => 'Prestamos cerrados',
             'leandings' => $closedldg,
             'section' => $mysec,

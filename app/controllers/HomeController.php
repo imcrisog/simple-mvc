@@ -14,7 +14,7 @@ class HomeController extends Controller {
         $users = new User();
         $users = $users->allWithMM('roles', true, ["name", "role"])->get();
 
-        return $this->view('home', [
+        return view('home', [
             'title' => 'Home',
             'users' => $users
         ]);
@@ -22,20 +22,20 @@ class HomeController extends Controller {
 
     public function register()
     {
-        return $this->view('Auth.register');
+        return view('Auth.register');
     }
 
     public function storeregister()
     {
-        $vals = $this->validator(['username', 'email', 'dni', 'password']);
-        if ($vals) return $this->backWithError("/register", $vals);
+        $vals = validator(['username', 'email', 'dni', 'password']);
+        if ($vals) return backWithError("/register", $vals);
 
         $user = new User();
 
         $findUser = $user->where("email", strip_tags($_POST["email"]))->first();
         $findDni = $user->where("dni", strip_tags($_POST["dni"]))->first();
 
-        if (!empty($findUser) || !empty($findDni)) return $this->backWithError("/register", "El usuario ya existe");
+        if (!empty($findUser) || !empty($findDni)) return backWithError("/register", "El usuario ya existe");
 
         $newUser = $user->create([
             'username' => strip_tags($_POST['username']),
@@ -55,37 +55,37 @@ class HomeController extends Controller {
 
         setcookie("X-TOKEN", $token, time() + 60 * 60 * 24 * 7, "/", null, true, true);
 
-        $this->successmsg("Registro de sesion Correctamente");
+        successmsg("Registro de sesion Correctamente");
 
         return header("Location: " . LOCALHOST . "/profile");
     }
 
     public function login()
     {
-        return $this->view('Auth.login', [
+        return view('Auth.login', [
             'title' => 'Login'
         ]);
     }
 
     public function storelogin()
     {
-        $vals = $this->validator(['dni', 'password']);
-        if ($vals) return $this->backWithError("/login", $vals);
+        $vals = validator(['dni', 'password']);
+        if ($vals) return backWithError("/login", $vals);
 
         $user = new User();
         $dni = strip_tags($_POST['dni']);
         $findUser = $user->where('dni', $dni)->first();
 
-        if (!$findUser) return $this->backWithError("/login", "Usuario no existe");
+        if (!$findUser) return backWithError("/login", "Usuario no existe");
 
         if (!password_verify(strip_tags($_POST['password']), $findUser['password'])) {
-            return $this->backWithError("/login", "Contraseña incorrecta");
+            return backWithError("/login", "Contraseña incorrecta");
         }
 
         $tokenDecoded = new TokenDecoded(['payload_key' => $findUser['id']], ['header_key' => SECRET_HD_KEY], ['exp' => time() + 2], ['nbf' => time() + 2]);
         $token = $tokenDecoded->encode(SECRET_KEY, JWT::ALGORITHM_HS256)->toString();
 
-        $this->successmsg("Iniciaste sesion Correctamente");
+        successmsg("Iniciaste sesion Correctamente");
 
         setcookie("X-TOKEN", $token, time() + 60 * 60 * 24 * 7, "/", null, true, true);
 
@@ -94,7 +94,7 @@ class HomeController extends Controller {
 
     public function profile($user)
     {
-        return $this->view('Auth.profile', [
+        return view('Auth.profile', [
             'title' => 'Tu perfil',
             'user' => $user
         ]);
@@ -105,25 +105,25 @@ class HomeController extends Controller {
         unset($_COOKIE['X-TOKEN']); 
         setcookie('X-TOKEN', null, -1, '/');
 
-        $this->successmsg("Cerraste sesion Correctamente");
+        successmsg("Cerraste sesion Correctamente");
 
         return header("Location: " . LOCALHOST . "/login");
     }
 
     public function password()
     {
-        return $this->view('Auth.password', [
+        return view('Auth.password', [
             'title' => 'Cambiar contraseña'
         ]);
     }
 
     public function update_password($user)
     {
-        $vals = $this->validator(['opassword', 'newpassword']);
-        if ($vals) return $this->backWithError("/password", $vals);
+        $vals = validator(['opassword', 'newpassword']);
+        if ($vals) return backWithError("/password", $vals);
 
         if (!password_verify(strip_tags($_POST['opassword']), $user['password'])) {
-            $this->backWithError("/password", "Contraseña incorrecta.");
+            backWithError("/password", "Contraseña incorrecta.");
         }
 
         $u = new User();
@@ -131,20 +131,20 @@ class HomeController extends Controller {
         $newPassword = password_hash(strip_tags($_POST['newpassword']), PASSWORD_BCRYPT);
 
         if (password_verify(strip_tags($_POST['opassword']), $newPassword)) {
-            $this->backWithError("/password", "La contraseña es la misma.");
+            backWithError("/password", "La contraseña es la misma.");
         }
 
         $u->update($user['id'], [
             'password' => $newPassword
         ]);
 
-        $this->successmsg("Contraseña actualizada correctamente.");
-        return $this->redirect("/profile");
+        successmsg("Contraseña actualizada correctamente.");
+        return redirect("/profile");
     }
 
     public function notfound()
     {
-        return $this->view('Errors.404', [
+        return view('Errors.404', [
             'title' => 'Pagina no Encontrada'
         ]);
     }
