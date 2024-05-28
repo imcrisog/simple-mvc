@@ -144,7 +144,7 @@ class Model {
             $tas = "{$replace[0]} AS {$replace[1]}";
         }
 
-        $sql = "WHERE NOT EXISTS ( SELECT t.*, r.{$tas} FROM {$this->table} t INNER JOIN {$tj} ru ON t.id = ru.{$tf}_id INNER JOIN {$table} r ON ru.{$ts}_id = r.id)";
+        $sql = "SELECT t.*, r.{$tas} FROM {$this->table} t INNER JOIN {$tj} ru ON t.id = ru.{$tf}_id INNER JOIN {$table} r ON ru.{$ts}_id = r.id";;
 
         $this->query($sql);
         return $this;

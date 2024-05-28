@@ -2,10 +2,12 @@
 
 namespace App\Controllers;
 
+use App\Models\Role;
 use App\Models\RoleUser;
 use App\Models\User;
 use Nowakowskir\JWT\JWT;
 use Nowakowskir\JWT\TokenDecoded;
+use Stringable;
 
 class HomeController extends Controller {
 
@@ -94,9 +96,17 @@ class HomeController extends Controller {
 
     public function profile($user)
     {
+        $UserRole = new RoleUser();
+        $UserRole = $UserRole->find($user['id']);
+
+        $StringRole = new Role();
+        $StringRole = $StringRole->find($user['id']);
+
         return view('Auth.profile', [
             'title' => 'Tu perfil',
-            'user' => $user
+            'user' => $user,
+            'role' => $StringRole,
+            'turn' => $user['turn']
         ]);
     }
 

@@ -189,8 +189,6 @@
         </div>
     </div>
     
-    <?php if ($role_user['role_id'] == 1) { ?>
-        <a  href="<?= LOCALHOST ?>/inventory/sections" class="absolute p-2.5 m-3 border-slate-700 hover:bg-gray-500 ease text-white transition duration-100 border px-4 top-0 right-0 rounded-md"><i class="fas fa-times"></i></a>
-    <?php }?>
+    <button onclick="window.history.back()" class="absolute p-2.5 m-3 border-slate-700 hover:bg-gray-500 ease text-white transition duration-100 border px-4 top-0 right-0 rounded-md"><i class="fas fa-times"></i></button>
         
     </div>
