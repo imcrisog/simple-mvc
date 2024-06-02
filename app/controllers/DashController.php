@@ -133,11 +133,7 @@ class DashController extends Controller {
     public function updater_section($id) 
     {
         $userable = new User();
-        $uses = $userable->all()->get();
-        $users = $userable->allWithMM('sections', true)->get();
-        $role = new RoleUser();
-        $userole = $role->all()->get(); 
-        $sus = new SectionUser();
+        $users = $userable->allWithoutMMU()->get();
 
         $section = new Section();
         $findSection = $section->find($id);
@@ -147,7 +143,6 @@ class DashController extends Controller {
         return view('Admin.updater_sections', [
             'title' => 'Actualiza ' . $findSection['name'],
             'section' => $findSection,
-            'role' => $userole,
             'users' => $users
         ]);
     }

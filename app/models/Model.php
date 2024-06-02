@@ -118,6 +118,14 @@ class Model {
         $this->query($sql);
     }
 
+    public function allWithoutMMU()
+    {
+        $sql = "SELECT u.* FROM users AS u CROSS JOIN sections AS s WHERE NOT EXISTS ( SELECT * FROM section_user AS us WHERE us.user_id = u.id AND us.section_id = s.id) AND EXISTS (SELECT * FROM role_user AS ru WHERE ru.user_id = u.id AND ru.role_id = 2 )";
+
+        $this->query($sql);
+        return $this;
+    }
+
     /**
      * Todo con una Relacion Muchos a Muchos
      *
@@ -144,7 +152,7 @@ class Model {
             $tas = "{$replace[0]} AS {$replace[1]}";
         }
 
-        $sql = "WHERE NOT EXISTS ( SELECT t.*, r.{$tas} FROM {$this->table} t INNER JOIN {$tj} ru ON t.id = ru.{$tf}_id INNER JOIN {$table} r ON ru.{$ts}_id = r.id)";
+        $sql = "SELECT t.*, r.{$tas} FROM {$this->table} t INNER JOIN {$tj} ru ON t.id = ru.{$tf}_id INNER JOIN {$table} r ON ru.{$ts}_id = r.id";
 
         $this->query($sql);
         return $this;
