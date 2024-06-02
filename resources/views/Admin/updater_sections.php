@@ -1,5 +1,6 @@
 <div class="w-3/4 flex justify-center items-center">
     <div class="w-1/2">
+        <button onclick="window.history.back()" class="absolute p-2.5 m-3 border-slate-700 hover:bg-gray-500 ease text-white transition duration-100 border px-4 top-0 right-0 rounded-md"><i class="fas fa-times"></i></button>
         <h2 class="my-6 flex justify-center text-xl font-bold"> Ingrese el Nombre de la Seccion </h2>
 
         <form class="w-full justify-center space-y-4 items-center flex flex-col" action="<?= LOCALHOST ?>/inventory/update/<?= $section['id'] ?>/section" method="post">
