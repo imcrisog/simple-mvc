@@ -118,9 +118,34 @@ class Model {
         $this->query($sql);
     }
 
-    public function allWithoutMMU()
+    /**
+     * Todo con una Relacion Muchos a Muchos
+     *
+     * Obtener todos los valores que no tengan una relacion Muchos a Muchos
+     *
+     * @param string $table Nombre de la Tabla a relacionar
+     * @param bool $contrary Si los nombres de las tablas se cambian de lugar. EJ: role_user si es true, user_role si es false
+     * @param string $withmm Ademas con alguna otra relacion muchos a muchos condicional
+     * @return this
+     **/
+    public function allWithoutMM(string $table, bool $contrary, string $withmm)
     {
-        $sql = "SELECT u.* FROM users AS u CROSS JOIN sections AS s WHERE NOT EXISTS ( SELECT * FROM section_user AS us WHERE us.user_id = u.id AND us.section_id = s.id) AND EXISTS (SELECT * FROM role_user AS ru WHERE ru.user_id = u.id AND ru.role_id = 2 )";
+        $tablef = trim($this->table, "s");
+        $tables = rtrim($table, "s");
+        if ($contrary) {
+            $tablej = $tables . "_" . $tablef;
+        } else {
+            $tablej = $tablef . "_" . $tables;
+        }
+
+
+        $sql = "SELECT u.* FROM {$this->table} AS u CROSS JOIN {$table} AS s WHERE NOT EXISTS ( SELECT * FROM {$tablej} AS us WHERE us.{$tablef}_id = u.id AND us.{$tables}_id = s.id)";
+
+        if (isset($withmm)) {
+            $tt = rtrim($withmm, 's');
+            $tablejf =  $tt . "_" . $tablef;
+            $sql .= "AND EXISTS (SELECT * FROM {$tablejf} AS ru WHERE ru.{$tablef}_id = u.id AND ru.{$tt}_id = 2 )";
+        }
 
         $this->query($sql);
         return $this;
