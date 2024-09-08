@@ -1,3 +1,4 @@
+# Hechos
 1- Datatable en elements [X]
 
 2- Cambiar el Login [X]
@@ -7,8 +8,6 @@
 4- Cambiar la Fuente [X]
 
 5- Prestamista [X]
-
-6- Reportes y Plataforma []
 
 7- Buscador [X]
 
@@ -22,8 +21,29 @@
 
 12 - Añadir usuarios a una seccion [X]
 
-13- pre-creacion de cuentas con nombre, dni, cargo, turno, []
+14- Funcion para dar de Baja elementos [X]
 
-14- Funcion para dar de Baja elementos []
+# Restantes
+
+## Importantes
+
+16 - Quimica Pre-set
+
+17 - (Button) Descargar todos los inventarios
+
+18 - Administrar multiples objetos (Cuando un mismo objeto se repite)
+
+19 - Registro Logger
+
+20 - Admisitracion de permisos (Admin/Super)
+
+
+## Featuares
+
+## No relevantes o Post-prod
+
+6- Reportes y Plataforma []
+
+13- pre-creacion de cuentas con nombre, dni, cargo, turno, []
 
 15- (Recomendacion) Hacer ToolTips []

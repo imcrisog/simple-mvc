@@ -5,7 +5,24 @@
 
             <div class="flex items-center justify-between w-full mb-6 pb-6 pt-2 border-b px-4 border-slate-900">
                 <h1 class="text-center font-semibold text-xl"> Tabla de Secciones </h1>
+                <button onclick="invpdf()" class="flex bg-red-600 hover:bg-red-500 font-bold text-white py-1.5 rounded-md px-2 text-xl">
+                    <span class="px-2 flex items-center">
+                        <svg class="mr-1.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
+                            height="24px" viewBox="0 0 24 24" version="1.1">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <rect x="0" y="0" width="24" height="24" />
+                                <circle class="fill-gray-200" cx="9" cy="15" r="6" />
+                                <path
+                                    d="M8.8012943,7.00241953 C9.83837775,5.20768121 11.7781543,4 14,4 C17.3137085,4 20,6.6862915 20,10 C20,12.2218457 18.7923188,14.1616223 16.9975805,15.1987057 C16.9991904,15.1326658 17,15.0664274 17,15 C17,10.581722 13.418278,7 9,7 C8.93357256,7 8.86733422,7.00080962 8.8012943,7.00241953 Z"
+                                    class="fill-gray-300" opacity="0.3" />
+                            </g>
+                        </svg>
 
+                        PDF del Inventario
+                    </span>
+                </button>
+
+                <?php ?>
                 <button @click="open = true" class="bg-indigo-600 hover:bg-indigo-500 font-bold text-white py-1.5 rounded-md px-2 text-xl">
                     <span class="px-2 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
@@ -100,13 +117,13 @@
                     </select>
                 </div>
 
-                <!-- <div class="w-2/3 pb-8">
+                <div class="w-2/3 pb-8">
                     <label for="custom"> Personalizar Seccion </label>
                     <select class="bg-gray-50 border py-2 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="custom">
                         <option value="false"> No Personalizar </option>
                         <option value="true"> Personalizar </option>
                     </select>
-                </div> -->
+                </div>
 
                 <button class="w-full py-2 hover:bg-indigo-500 font-semibold bg-indigo-700 rounded-md uppercase" type="submit"> Enviar </button>
             </form>
@@ -131,6 +148,20 @@
 
             adv.classList.remove('absolute', 'flex', 'flex-col')
             adv.classList.add('hidden')
+        }
+
+        function invpdf()
+        {
+            let URLs = [];
+            URLs.push(
+                <?php foreach ($allSections as $sec) {?>
+                   "<?= LOCALHOST . "/inventory/show/$sec/elements"?>",
+                <?php } ?>
+            )
+
+            URLs.forEach(url => {
+                window.open(url);
+            });
         }
     </script>
 </div>

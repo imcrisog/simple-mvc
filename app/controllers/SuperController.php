@@ -19,7 +19,7 @@ class SuperController extends Controller {
         $section = $sectionable->where("user_id", $user['id'])->first();
 
         if (empty($section)) {
-            return var_dump("No estas en ninguna seccion"); 
+            return view("Errors.noSectionPrestamist"); 
         }
 
         return view("Admin.elements", [
@@ -71,12 +71,15 @@ class SuperController extends Controller {
 
     public function create_element($user) 
     {
+        $role = new RoleUser();
+        $section = $_POST['section'];
+        $userole = $role->where("user_id", $user['id'])->first();
+
         $vals = validator(['name', 'cantidad', 'caracteristicas', 'estado', 'marca', 'procedencia']);
+        if ($vals && $userole['role_id'] == 1) return backWithError("/inventory/$section/elements", $vals);
         if ($vals) return backWithError("/inventory/elements", $vals);
         
         $element = new Element();
-        $role = new RoleUser();
-        $section = $_POST['section'];
 
         if (isset($_POST['data'])) {
             $final = json_encode($_POST['data']);
@@ -94,8 +97,6 @@ class SuperController extends Controller {
             'data' => isset($_POST['data']) ? $final : "",
             'section_id' => $section
         ]);
-
-        $userole = $role->where("user_id", $user['id'])->first();
 
         if ($userole['role_id'] == 1) {
             return redirect("/inventory/$section/elements");

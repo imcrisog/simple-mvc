@@ -49,8 +49,13 @@ class DashController extends Controller {
             warningmsg("No hay supervisores disponibles.");
         }
 
+        $allSectionsID = $section->all()->get();
+
+        $allSectionsID = array_column($allSectionsID, "id");
+
         return view('Admin.sections', [
             'title' => 'Secciones',
+            'allSections' => $allSectionsID,
             'sections' => $sections,
             'users' => $users,
             'prestusers' => $prestusers,
