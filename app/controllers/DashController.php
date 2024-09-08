@@ -138,7 +138,7 @@ class DashController extends Controller {
     public function updater_section($id) 
     {
         $userable = new User();
-        $users = $userable->allWithoutMMU()->get();
+        $users = $userable->allWithoutMM('sections', true, 'roles')->get();
 
         $section = new Section();
         $findSection = $section->find($id);
