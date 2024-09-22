@@ -23,15 +23,15 @@
 
 14- Funcion para dar de Baja elementos [X]
 
+17 - (Button) Descargar todos los inventarios [X]
+
+18 - Administrar multiples objetos (Cuando un mismo objeto se repite) [X]
+
 # Restantes
 
 ## Importantes
 
 16 - Quimica Pre-set
-
-17 - (Button) Descargar todos los inventarios
-
-18 - Administrar multiples objetos (Cuando un mismo objeto se repite)
 
 19 - Registro Logger
 

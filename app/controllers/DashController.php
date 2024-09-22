@@ -280,7 +280,7 @@ class DashController extends Controller {
         return redirect("/inventory/users");
     }
 
-    public function update_user_password() {}
+    // public function update_user_password() {}
 
     public function delete_user($id) 
     {

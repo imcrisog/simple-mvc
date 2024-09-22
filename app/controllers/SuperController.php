@@ -15,8 +15,9 @@ class SuperController extends Controller {
         $sectionable = new Section();
         $element = new Element();
         $elements = $element->all()->get();
-
+        $rolable = new RoleUser();
         $section = $sectionable->where("user_id", $user['id'])->first();
+        $ur = $rolable->where("user_id", $user['id'])->first();
 
         if (empty($section)) {
             return view("Errors.noSectionPrestamist"); 
@@ -26,7 +27,8 @@ class SuperController extends Controller {
             'title' => 'Elementos',
             'elements' => $elements,
             'section' => $section,
-            'user' => $user
+            'user' => $user,
+            'role_user' => $ur    
         ]);
     }
 
@@ -85,18 +87,21 @@ class SuperController extends Controller {
             $final = json_encode($_POST['data']);
         }
 
-        $element->create([
-            'name' => strip_tags($_POST['name']),
-            'cantidad' => strip_tags($_POST['cantidad']),
-            'caracteristicas' => strip_tags($_POST["caracteristicas"]),
-            'marca' => strip_tags($_POST["marca"]),
-            'procedencia' => strip_tags($_POST["procedencia"]),
-            'observaciones' => strip_tags($_POST["obs"]),
-            'added_at' => $_POST['added_at'],
-            'estado' => $_POST['estado'],
-            'data' => isset($_POST['data']) ? $final : "",
-            'section_id' => $section
-        ]);
+        for ($i = 0; $i < (int) $_POST['cantidad']; $i++)
+        {
+            $element->create([
+                'name' => strip_tags($_POST['name']),
+                'cantidad' => 1,
+                'caracteristicas' => strip_tags($_POST["caracteristicas"]),
+                'marca' => strip_tags($_POST["marca"]),
+                'procedencia' => strip_tags($_POST["procedencia"]),
+                'observaciones' => strip_tags($_POST["obs"]),
+                'added_at' => $_POST['added_at'],
+                'estado' => $_POST['estado'],
+                'data' => isset($_POST['data']) ? $final : "",
+                'section_id' => $section
+            ]);
+        }
 
         if ($userole['role_id'] == 1) {
             return redirect("/inventory/$section/elements");

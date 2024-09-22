@@ -88,7 +88,7 @@
                 </thead>
                 <tbody class="text-center">
                     <?php foreach ($elements as $key => $element) { ?>
-                    <?php if ($element["section_id"] == $section['id'] || $role['role_id'] == 1) { ?>
+                    <?php if ($element["section_id"] == $section['id'] || $role_user['role_id'] == 1) { ?>
                     <tr class="bg-white dark:bg-gray-900 dark:border-gray-700">
                         <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"><?= $element['id'] ?></td>
                         <td class="px-6 py-4"><?= $element['name'] ?></td>
@@ -189,6 +189,12 @@
         </div>
     </div>
     
-    <button onclick="window.history.back()" class="absolute p-2.5 m-3 border-slate-700 hover:bg-gray-500 ease text-white transition duration-100 border px-4 top-0 right-0 rounded-md"><i class="fas fa-times"></i></button>
+    <?php if ($role_user['role_id'] == 1) { ?>
+        <a  href="<?= LOCALHOST ?>/inventory/sections" class="absolute p-2.5 m-3 border-slate-700 hover:bg-gray-500 ease text-white transition duration-100 border px-4 top-0 right-0 rounded-md"><i class="fas fa-times"></i></a>
+    <?php } 
+    else 
+    { ?>
+        <a  href="<?= LOCALHOST ?>/inventory/sections" class="absolute p-2.5 m-3 border-slate-700 hover:bg-gray-500 ease text-white transition duration-100 border px-4 top-0 right-0 rounded-md"><i class="fas fa-times"></i></a>
+    <?php }?>
         
     </div>
